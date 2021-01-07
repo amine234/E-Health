@@ -1,14 +1,15 @@
-#include "mainwindow.h"
-#include "ui_mainwindow.h"
+#include "dialogamine.h"
+#include "ui_dialogamine.h"
 #include<QString>
 #include"RDV.h"
 #include "Facture.h"
 #include<QMessageBox>
 #include<QTableView>
 #include <QApplication>
-MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent)
-    , ui(new Ui::MainWindow)
+#include "menu.h"
+Dialogamine::Dialogamine(QWidget *parent)
+    : QDialog(parent)
+    , ui(new Ui::Dialogamine)
 {
     ui->setupUi(this);
     ui->tableView->setModel(R.afficher());
@@ -23,13 +24,13 @@ MainWindow::MainWindow(QWidget *parent)
           ui->Date->setText(Date_txt);
 }
 
-MainWindow::~MainWindow()
+Dialogamine::~Dialogamine()
 {
     delete ui;
 
 }
 
-void MainWindow::showTime()
+void Dialogamine::showTime()
 {
     QTime time=QTime::currentTime();
     QString time_txt=time.toString("hh:mm:ss");
@@ -37,14 +38,14 @@ void MainWindow::showTime()
 }
 
 
-void MainWindow::on_pushButton_AR_clicked()
+void Dialogamine::on_pushButton_AR_clicked()
 {int IDP1=ui->lineIDP1->text().toUInt();int IDM=ui->lineIDM->text().toUInt();int DR=ui->lineDR->text().toUInt();QString Su=ui->lineSu->text();
     RDV R  (IDP1,IDM,DR,Su);
         R.ajouter();
           ui->tableView->setModel(R.afficher());
 }
 
-void MainWindow::on_pushButton_MR_clicked()
+void Dialogamine::on_pushButton_MR_clicked()
 {int IDP1=ui->lineIDP1->text().toUInt();QString Su=ui->lineSu->text();
     bool    test=R.modifier(IDP1,Su) ;
         if (test)
@@ -60,7 +61,7 @@ void MainWindow::on_pushButton_MR_clicked()
                                 QMessageBox::Cancel);}
 }
 
-void MainWindow::on_pushButton_SR_clicked()
+void Dialogamine::on_pushButton_SR_clicked()
 {
     bool    test=R.supprimer( ui->lineIDP1->text().toUInt());
         if (test)
@@ -77,13 +78,13 @@ void MainWindow::on_pushButton_SR_clicked()
                                 QMessageBox::Cancel);}
 }
 
-void MainWindow::on_pushButton_AF_clicked()
+void Dialogamine::on_pushButton_AF_clicked()
 {int ID2=ui->lineIDP2->text().toUInt();int DF=ui->lineDF->text().toUInt();QString SE=ui->lineSe->text();QString MP=ui->lineMP->text();QString L=ui->lineL->text();
     Facture F  (ID2,DF,SE,MP,L);
         F.ajouter();
           ui->tableView_2->setModel(F.afficher());
 }
-void MainWindow::on_pushButton_MF_clicked()
+void Dialogamine::on_pushButton_MF_clicked()
 { int ID2=ui->lineIDP2->text().toUInt();QString L=ui->lineL->text();
     bool    test=F.modifier(ID2,L) ;
         if (test)
@@ -99,7 +100,7 @@ void MainWindow::on_pushButton_MF_clicked()
                                 QMessageBox::Cancel);}
 }
 
-void MainWindow::on_pushButton_SF_clicked()
+void Dialogamine::on_pushButton_SF_clicked()
 {
     bool    test=F.supprimer( ui->lineIDP2->text().toUInt());
         if (test)
@@ -116,21 +117,21 @@ void MainWindow::on_pushButton_SF_clicked()
                                 QMessageBox::Cancel);}
 }
 
-void MainWindow::on_pushButton_RR_clicked()
+void Dialogamine::on_pushButton_RR_clicked()
 {
     RDV R;
         int id = ui->lineIDP1->text().toInt();
        ui->tableView->setModel(R.rechercher(id));
 }
 
-void MainWindow::on_pushButtonRF_clicked()
+void Dialogamine::on_pushButtonRF_clicked()
 {
     Facture F;
         int id = ui->lineIDP2->text().toInt();
        ui->tableView_2->setModel(F.rechercher(id));
 }
 
-void MainWindow::on_pushButton_TR_clicked()
+void Dialogamine::on_pushButton_TR_clicked()
 {
     RDV R;
 
@@ -153,7 +154,7 @@ void MainWindow::on_pushButton_TR_clicked()
                                                 "Click Cancel to exit."), QMessageBox::Cancel);
 }
 
-void MainWindow::on_pushButtonTF_clicked()
+void Dialogamine::on_pushButtonTF_clicked()
 {
     Facture F;
 
@@ -176,14 +177,14 @@ void MainWindow::on_pushButtonTF_clicked()
                                                 "Click Cancel to exit."), QMessageBox::Cancel);
 }
 
-void MainWindow::on_pushButton_mail_clicked()
+void Dialogamine::on_pushButton_mail_clicked()
 {
     mail* smtp = new mail("projet.esprit11@gmail.com", "esprit2020", "smtp.gmail.com", 465);
 
             smtp->sendMail("projet.esprit11@gmail.com", ui->ecrire_mail->text() , ui->ecrire_objet->text() ,ui->ecrire_txt->toPlainText());
 }
 
-void MainWindow::on_pushButtonPDF_clicked()
+void Dialogamine::on_pushButtonPDF_clicked()
 {
     QString fileName = QFileDialog::getSaveFileName((QWidget* )0, "Open PDF", QString(), "*.pdf");
                         if (QFileInfo(fileName).suffix().isEmpty()) { fileName.append("Commande.pdf"); }
@@ -209,6 +210,13 @@ void MainWindow::on_pushButtonPDF_clicked()
                         doc.setPageSize(printer.pageRect().size());
                         doc.print(&printer);
 }
-//***************************************************************************************************************************
-//******************************************************************************************************************************
 
+
+
+void Dialogamine::on_commandLinkButton_clicked()
+{
+    hide();
+  menu m;
+  m.setModal(true);
+  m.exec();
+}

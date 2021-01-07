@@ -14,16 +14,16 @@
 
 
 QT_BEGIN_NAMESPACE
-namespace Ui { class MainWindow; }
+namespace Ui { class Dialogamine; }
 QT_END_NAMESPACE
 
-class MainWindow : public QMainWindow
+class Dialogamine : public QDialog
 {
     Q_OBJECT
 
 public:
-    MainWindow(QWidget *parent = nullptr);
-    ~MainWindow();
+    Dialogamine(QWidget *parent = nullptr);
+    ~Dialogamine();
 
 private slots:
 
@@ -57,9 +57,11 @@ private slots:
 
 
 
+    void on_commandLinkButton_clicked();
+
 private:
     RDV R ;
     Facture F;
-    Ui::MainWindow *ui;
+    Ui::Dialogamine *ui;
 };
 #endif // MAINWINDOW_H
